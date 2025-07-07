@@ -23,7 +23,7 @@ export default function App() {
   const [feedback, setFeedback] = useState('');
 
   useEffect(() => {
-    fetch('/flashcards.json')
+    fetch('/src/flashcards.json')
       .then(res => res.json())
       .then(data => {
         const cards = data['learn-french'].flashcards;
