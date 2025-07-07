@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Page Title</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS file if you have one -->
+</head>
+<body>
+
+    <div id="cart-container" class="cart-container"></div>
+    
+    <div class="price-box price-box-hover text-center">
+        <p class="price-box-title">Free</p>
+        <h2><sup>$</sup><span>0</span><sub>/mo.</sub></h2>
+        <div class="price-details">              
+            <p class="price-details-line-odd"><strong>1</strong> Project</p>              
+            <p class="price-details-line-even"><strong>1</strong> Users</p>
+            <p class="price-details-line-odd"><strong>1GB</strong> Storage</p>
+            <p class="price-details-line-even"><strong>No</strong> Privileges</p>
+            <p class="price-details-line-odd"><strong>Basic</strong> Support</p>              
+        </div>
+        <input type="checkbox" id="free-plan" name="plan">
+        <label for="free-plan">Select Plan</label>
+        <button class="btn btn-white transperant-btn" id="add-to-cart" disabled>Add to Cart</button>
+    </div>
+
+    <script>
+        // Get all price boxes
+        const priceBoxes = document.querySelectorAll('.price-box');
+
+        // Loop through each price box
+        priceBoxes.forEach((priceBox) => {
+            // Get the checkbox and button
+            const checkbox = priceBox.querySelector('input[type="checkbox"]');
+            const button = priceBox.querySelector('button');
+
+            // Add event listener to checkbox
+            checkbox.addEventListener('change', () => {
+                // If checkbox is checked, enable button
+                button.disabled = !checkbox.checked;
+            });
+
+            // Add event listener to button
+            button.addEventListener('click', () => {
+                // Get the selected plan details
+                const planDetails = priceBox.querySelector('.price-details');
+                const planTitle = priceBox.querySelector('.price-box-title').textContent;
+                const planPrice = priceBox.querySelector('h2').textContent;
+
+                // Create a cart item object
+                const cartItem = {
+                    title: planTitle,
+                    price: planPrice,
+                    details: planDetails.innerHTML,
+                };
+
+                // Add cart item to cart
+                addCartItemToCart(cartItem);
+            });
+        });
+
+        // Function to add cart item to cart
+        function addCartItemToCart(cartItem) {
+            // Get the cart container
+            const cartContainer = document.querySelector('#cart-container');
+
+            // Create a new cart item element
+            const cartItemElement = document.createElement('div');
+            cartItemElement.classList.add('cart-item');
+
+            // Add cart item details to element
+            cartItemElement.innerHTML = `
+                <h3>${cartItem.title}</h3>
+                <p>${cartItem.price}</p>
+                <p>${cartItem.details}</p>
+            `;
+
+            // Add cart item element to cart container
+            cartContainer.appendChild(cartItemElement);
+        }
+    </script>
+</body>
+</html>

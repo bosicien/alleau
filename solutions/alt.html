@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Itinerary Scheduler</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS file if you have one -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script> <!-- Include jsPDF -->
+</head>
+<body>
+
+    <div id="cart-container" class="cart-container"></div>
+    
+    <div class="price-box price-box-hover text-center">
+        <p class="price-box-title">HOLLAND & BELGIUM</p>
+        <h2><sub>Starting at</sub><sup>USD$</sup><span>1000</span><sub>/person.</sub></h2>
+        
+        <div class="price-details">
+            <p class="price-details-line-odd"><strong>DAY 1 </strong> AMSTERDAM - THE NETHERLANDS</p>
+            <input type="checkbox" id="day1" name="plan">
+            <label for="day1">Add to Itinerary</label>
+        </div>
+        
+        <div class="price-details">
+            <p class="price-details-line-even"><strong>DAY 2 </strong> AMSTERDAM - THE NETHERLANDS</p>
+            <input type="checkbox" id="day2" name="plan">
+            <label for="day2">Add to Itinerary</label>
+        </div>
+        
+        <div class="price-details">
+            <p class="price-details-line-odd"><strong>DAY 3</strong> HOORN - THE NETHERLANDS</p>
+            <input type="checkbox" id="day3" name="plan">
+            <label for="day3">Add to Itinerary</label>
+        </div>
+        
+        <div class="price-details">
+            <p class="price-details-line-even"><strong>DAY 4</strong> DORDRECHT - THE NETHERLANDS</p>
+            <input type="checkbox" id="day4" name="plan">
+            <label for="day4">Add to Itinerary</label>
+        </div>
+        
+        <div class="price-details">
+            <p class="price-details-line-odd"><strong>DAY 5</strong> KINDERDIJK- THE NETHERLANDS</p>
+            <input type="checkbox" id="day5" name="plan">
+            <label for="day5">Add to Itinerary</label>
+        </div>
+    </div>
+
+    <button class="btn btn-white transperant-btn" id="add-to-cart" disabled>Add to Cart</button>
+    <button class="btn btn-white transperant-btn" id="generate-pdf" disabled>Generate PDF</button>
+
+    <script>
+        const priceBoxes = document.querySelectorAll('.price-box');
+        const addToCartButton = document.getElementById('add-to-cart');
+        const generatePdfButton = document.getElementById('generate-pdf');
+
+        // Enable/disable buttons based on checkbox selection
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                const anyChecked = Array.from(document.querySelectorAll('input[type="checkbox"]')).some(cb => cb.checked);
+                addToCartButton.disabled = !anyChecked;
+                generatePdfButton.disabled = !anyChecked;
+            });
+        });
+
+        // Add event listener to "Add to Cart" button
+        addToCartButton.addEventListener('click', () => {
+            const selectedItems = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(checkbox => {
+                const dayDetail = checkbox.parentElement.querySelector('p').innerHTML;
+                return dayDetail;
+            });
+
+            // Display selected items in the cart container
+            const cartContainer = document.querySelector('#cart-container');
+            cartContainer.innerHTML = ''; // Clear previous items
+            selectedItems.forEach(item => {
+                const cartItemElement = document.createElement('div');
+                cartItemElement.classList.add('cart-item');
+                cartItemElement.innerHTML = item;
+                cartContainer.appendChild(cartItemElement);
+            });
+        });
+
+        // Generate PDF from selected itinerary
+        generatePdfButton.addEventListener('click', () => {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const selectedItems = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(checkbox => {
+                return checkbox.parentElement.querySelector('p').innerText;
+            });
+
+            doc.text("Selected Itinerary:", 10, 10);
+            selectedItems.forEach((item, index) => {
+                doc.text(`${index + 1}. ${item}`, 10, 20 + (index * 10));
+            });
+
+            doc.save('itinerary.pdf');
+        });
+    </script>
+</body>
+</html>
