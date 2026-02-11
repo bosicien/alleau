@@ -1663,7 +1663,6 @@ ul.team-overlay-social li a:hover{
     width: 100%;
     opacity: 0.8;
     display: block;
-    overflow: hidden;    
     background-repeat: no-repeat;
     background-position: top center;
     -webkit-background-size: cover;
